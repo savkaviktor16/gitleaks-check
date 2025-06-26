@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+# Check if gitleaks is installed
+if ! command -v gitleaks &> /dev/null; then
+  echo "Gitleaks not found. Installing..."
+
+  curl -sSfL https://raw.githubusercontent.com/savkaviktor16/gitleaks-check/main/install-gitleaks-crossplatform.sh | sh
+
+  # Check again if installed
+  if ! command -v gitleaks &> /dev/null; then
+    echo "Gitleaks installation failed. Please install manually: https://github.com/zricethezav/gitleaks/releases"
+    exit 1
+  fi
+fi
+
 echo "🚀 Installing Gitleaks pre-commit hook..."
 
 # Check if current directory is a Git repository
@@ -27,4 +40,4 @@ rm -f .git/hooks/pre-commit
 ln -s ../../.githooks/pre-commit .git/hooks/pre-commit
 
 echo "✅ Pre-commit hook installed successfully!"
-echo "📌 Gitleaks will now run before every commit."
+echo "📌 To run Gitleaks before every commit, enable it with <git config gitleaks.enable true> first"
